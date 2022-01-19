@@ -11,6 +11,12 @@ Cours de Programmation Fonctionnelle Avancée
 
 La mailing-list dédiée à ce cours est `pfa-forum@listes.univ-paris-diderot.fr`. Inscrivez-vous via https://listes.univ-paris-diderot.fr/sympa/subscribe/pfa-forum
 
+Ancien [site du cours par Ralf Treinen](http://www.irif.fr/~treinen/teaching/pfav)
+
+### Cours
+
+A venir
+
 ### Projet
 
 A venir
@@ -27,3 +33,7 @@ Les premiers TP se feront sur http://pfav.ddns.net , une instance de la platefor
 Pour ces TP sous LearnOCaml, pas besoin d'installation particulière d'OCaml sur vos machines, un navigateur web moderne suffit.
 
 Un TP ultérieur (ainsi que le projet) nécessiteront d'avoir une installation locale d'OCaml et d'autres outils comme `dune`, plus de détails à venir.
+
+### Bibliographie
+
+A venir
