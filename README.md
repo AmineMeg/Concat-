@@ -15,7 +15,7 @@ Ancien [site du cours par Ralf Treinen](http://www.irif.fr/~treinen/teaching/pfa
 
 ### Cours
 
-A venir
+- cours 0 : [Introduction, rappels OCaml](cours/cours0.pdf)
 
 ### Projet
 
