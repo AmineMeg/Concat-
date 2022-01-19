@@ -34,6 +34,17 @@ Pour ces TP sous LearnOCaml, pas besoin d'installation particulière d'OCaml sur
 
 Un TP ultérieur (ainsi que le projet) nécessiteront d'avoir une installation locale d'OCaml et d'autres outils comme `dune`, plus de détails à venir.
 
-### Bibliographie
+### Ressources et bibliographie
 
-A venir
+- [Manuel officiel OCaml](https://ocaml.org/releases/latest/manual.html).
+- [OCaml programming guidelines](https://ocaml.org/learn/tutorials/guidelines.html).
+- Quelques [forums](https://ocaml.org/community/mailing_lists.html) à OCaml.
+- Cours [PF5 en Licence 3](https://gaufre.informatique.univ-paris-diderot.fr/letouzey/pf5) ici-même.
+- Cours [Initiation à la programmation fonctionnelle](https://www.lri.fr/~filliatr/m1/cours-ocaml.en.html) par [Jean-Christophe Filliâtre](https://www.lri.fr/~filliatr/).
+- Livre [Développement d'applications avec Objective Caml](http://caml.inria.fr/pub/docs/oreilly-book/) par Emmanuel Chailloux, Pascal Manoury, Bruno Pagano.
+- Les exercices OCaml du site [Learn OCaml](https://ocaml-sf.org/learn-ocaml-public/).
+- Livre [OCaml from the very beginning](http://ocaml-book.com/) par John Whitington, 2013.
+- Livre [Purely Functional Data Structures](http://www.cambridge.org/fr/knowledge/isbn/item1161740/?site_locale=fr_FR) par Chris Okasaki, 1999.
+- Le chapitre 10 du livre [OCaml for Scientists](http://www.ffconsultancy.com/products/ocaml_for_scientists/) contient [des exemples complets de solutions fonctionnelles élégantes](http://www.ffconsultancy.com/products/ocaml_for_scientists/complete/index.html)
+- Une liste assez complète de livres sur la programmation fonctionnelle est [maintenue par Alex Ott](http://alexott.net/en/fp/books/).
+
