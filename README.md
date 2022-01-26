@@ -15,7 +15,9 @@ Ancien [site du cours par Ralf Treinen](http://www.irif.fr/~treinen/teaching/pfa
 
 ### Cours
 
-- cours 0 : Introduction, rappels OCaml. [pdf](cours/cours0.handout.pdf) et [pdf par 4 pages](cours/cours0.handout4.pdf).
+- cours 0 : Introduction, rappels OCaml. [pdf](cours/cours0.handout.pdf), [pdf 4-par-page](cours/cours0.handout4.pdf), [fichiers exemples](cours/cours0.examples).
+- cours 1 : Modules OCaml. [pdf](cours/cours1.handout.pdf), [pdf 4-par-page](cours/cours1.handout4.pdf), [fichiers exemples](cours/cours1.examples).
+
 
 ### Projet
 
