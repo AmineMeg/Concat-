@@ -6,12 +6,14 @@ let rec of_list = function
      match o with
      | None -> c
      | Some c' -> c'.prev <- c; c ;;
-let rec toutagauche = function
+(* refaire une liste, par la droite pour éviter List.rev *)
+let rec toutadroite = function
   | None -> None
-  | Some {prev=None} as c -> c
-  | Some {prev=c} -> toutagauche c ;;
+  | Some {next=None} as c -> c
+  | Some {next=c} -> toutadroite c ;;
 let to_list o =
   let rec build acc = function
-    | None -> List.rev acc
-    | Some {info=a;next=c} -> build (a::acc) c
-  in build [] (toutagauche o) ;;
+    | None -> acc
+    | Some {info=a;prev=c} -> build (a::acc) c
+  in build [] (toutadroite o) ;;
+of_list [1;2;3] |> to_list ;;
