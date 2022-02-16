@@ -18,6 +18,7 @@ Ancien [site du cours par Ralf Treinen](http://www.irif.fr/~treinen/teaching/pfa
 - cours 0 : Introduction, rappels OCaml. [pdf](cours/cours0.handout.pdf), [pdf 4-par-page](cours/cours0.handout4.pdf), [fichiers exemples](cours/cours0.examples).
 - cours 1 : Modules OCaml. [pdf](cours/cours1.handout.pdf), [pdf 4-par-page](cours/cours1.handout4.pdf), [fichiers exemples](cours/cours1.examples).
 - cours 2 : Zippers. [pdf](cours/cours2.handout.pdf), [pdf 4-par-page](cours/cours2.handout4.pdf), [fichiers exemples](cours/cours2.examples).
+- cours 3 : Structures fonctionnelles efficaces. [pdf](cours/cours3.handout.pdf), [pdf 4-par-page](cours/cours3.handout4.pdf), [fichiers exemples](cours/cours3.examples).
 
 ### Projet
 
