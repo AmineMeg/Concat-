@@ -23,7 +23,7 @@ Ancien [site du cours par Ralf Treinen](http://www.irif.fr/~treinen/teaching/pfa
 
 ### Projet
 
-A venir
+Voir le [README.md](projet/README.md) correspondant.
 
 ### TP
 
