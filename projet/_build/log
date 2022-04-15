@@ -1,10 +1,10 @@
-# dune build main.exe
+# dune build _build/default/bin/main.exe
 # OCAMLPARAM: unset
 # Workspace root: "/home/elsa/Master 1/pfa-2022/projet"
-$ /usr/bin/nproc > /tmp/dune216bd6.output 2> /dev/null
+$ /usr/bin/nproc > /tmp/dune31a2f9.output 2> /dev/null
 # Auto-detected concurrency: 8
 # disable binary cache
-$ /home/elsa/.opam/4.13.1/bin/ocamlc.opt -config > /tmp/dune9dbe86.output
+$ /home/elsa/.opam/4.13.1/bin/ocamlc.opt -config > /tmp/dune6ec205.output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
