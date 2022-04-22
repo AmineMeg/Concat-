@@ -1,6 +1,14 @@
 module type GRAPHTYPE = sig
-    type 'a t
-    
-end
+    type label = string
+    type node = int
+    type vert = node * node * label list
+    type graph = 
+        node list * vert list
 
-module GRAPH : GRAPHTYPE
+    val inter : graph -> graph -> graph
+end 
+
+module Graph : GRAPHTYPE =
+struct 
+    let inter g1 g2 = g1
+end
