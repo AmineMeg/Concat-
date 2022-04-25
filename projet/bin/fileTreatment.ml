@@ -18,24 +18,6 @@ let from_file_to_list file =
             | _ -> raise Wrong_input
     in
     split_in_out (String.split_on_char '\n' (read_lines file))
-    
-
-(** Convertit une string en tableau de caractères *)
-let explode str =
-  let rec exp a b =
-    if a < 0 then b
-    else exp (a - 1) (str.[a] :: b)
-  in
-  exp (String.length str - 1) []
-
-(** Convertit une liste de ligne du fichier en liste 
-    de listes de caractères 
-let rec from_file_to_tab file_list =
-    match file_list with
-    | [] -> []
-    | h :: t -> 
-        (explode h) :: (from_file_to_tab t) *)
-
 
 (** Convertit un fichier en tableau de paire de string 
     et affiche chaque ligne tu tableau en faisant un retour 

@@ -12,7 +12,7 @@ end
 module Graph : GRAPHTYPE =
 struct 
     type label = string
-    type node = int
+    type node = Node of int
     type vert = node * node * label list
     type graph = 
         node list * vert list
