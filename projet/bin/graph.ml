@@ -1,17 +1,21 @@
 exception Empty
 
 module type GRAPHTYPE = sig
-    type label = string
-    type node = int
-    type vert = node * node * label list
-    type graph = 
-        node list * vert list
+    type label 
+    type node 
+    type vert
+    type graph 
 
     val inter : graph -> graph -> graph
 end 
 
 module Graph : GRAPHTYPE =
 struct 
+    type label = string
+    type node = int
+    type vert = node * node * label list
+    type graph = 
+        node list * vert list
 
     (** Intersection d'un label et d'un ensemble de labels *)
     let rec inter_labs lab labs =
@@ -51,7 +55,7 @@ struct
             match v1 with 
             | [] -> acc
             | h :: t -> 
-                inter_verts h v2
+                aux t v2 ((inter_verts h v2) :: acc)
         in
         aux v1 v2 []
 
@@ -66,12 +70,12 @@ struct
         aux n1 n2 []
 
     (** Intersection de deux graphes *)
-    let inter g1 g2 = 
+    let inter (g1:graph) (g2:graph) : graph = 
         match g1 with
         | n1, v1 ->
             begin 
             match g2 with
             | n2, v2 ->
-                (inter_node n1 n2, inter_node v1 v2)
+                (inter_node n1 n2, inter_vert v1 v2)
             end 
 end
