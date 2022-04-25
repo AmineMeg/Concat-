@@ -65,7 +65,9 @@ struct
             match n1 with
             | [] -> n2
             | h :: t -> 
-                aux t n2 ((List.map (fun x -> h*10+x) n2) :: acc)
+                match h with
+                | Node h ->
+                    aux t n2 ((List.map (fun x -> begin match x with Node x -> h*10+x end) n2) :: acc)
         in
         aux n1 n2 []
 

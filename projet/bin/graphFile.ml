@@ -10,6 +10,13 @@ let explode str =
   in
   exp (String.length str - 1) []
 
+(** Enlève le dernier élément d'une liste *)
+let rec remove_last l =
+    match l with 
+    | [] -> raise Not_found
+    | [x] -> []
+    | h :: t -> h :: (remove_last t)
+
 (** Retourne une liste du nombre de noeud correspondant à la 
     longueur du résultat attendu *)
 let rec nodes_of len ret =
@@ -17,9 +24,23 @@ let rec nodes_of len ret =
     | 0 -> ret
     | _ -> nodes_of (len - 1) ((Node (len - 1)) :: ret)
 
-let labels_of_string expected input nodes =
-...
-
+(** Donne tous les substrings possibles d'une chaîne de caractères *)
+let substring_in expected =
+    let rec sub_from_end expected (ret:(string list) list) =
+        match expected with
+        | [] -> ret
+        | c :: word -> 
+            sub_from_end word ([c] :: (List.map (fun x -> x @ [c]) ret))
+    in
+    let rec sub_from_start expected ret =
+        match expected with
+        | [] -> ret
+        | _ -> 
+            sub_from_start 
+            (remove_last expected) 
+            ((sub_from_end expected []) @ ret)
+    in
+    sub_from_start expected []
 
 
 let rec create_graph_from_line line =
