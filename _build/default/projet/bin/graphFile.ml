@@ -1,6 +1,5 @@
 open FileTreatment;;
 open Graph;;
-open AST;;
 
 
 (** Convertit une string en tableau de caractères *)
@@ -18,9 +17,31 @@ let rec remove_last l =
     | [x] -> []
     | h :: t -> h :: (remove_last t)
 
-(** Donne tous les substrings possibles d'une chaîne de caractères et les
-    retourne sous la forme d'un index de départ, un index de fin et un 
-    tableau de caractères *)
+(** Retourne une liste du nombre de noeud correspondant à la 
+    longueur du résultat attendu *)
+let rec nodes_of len ret =
+    match len with
+    | 0 -> ret
+    | _ -> nodes_of (len - 1) ((Node (len - 1)) :: ret)
+
+(** Donne tous les substrings possibles d'une chaîne de caractères *)
+let substring_in expected =
+    let rec sub_from_end expected (ret:(string list) list) =
+        match expected with
+        | [] -> ret
+        | c :: word -> 
+            sub_from_end word ([c] :: (List.map (fun x -> x @ [c]) ret))
+    in
+    let rec sub_from_start expected ret =
+        match expected with
+        | [] -> ret
+        | _ -> 
+            sub_from_start 
+            (remove_last expected) 
+            ((sub_from_end expected []) @ ret)
+    in
+    sub_from_start expected []
+
 let sub exp =
     let rec sub_of len exp acc =
         match exp with
@@ -30,33 +51,20 @@ let sub exp =
             then sub_of (len - 1) word (c :: acc)
             else List.rev acc
     in
-    let rec dim_exp exp acc len strt =
+    let rec dim_exp exp acc len =
         match exp with
         | [] -> acc
         | c :: word -> 
             if len <= (List.length exp) && len > 0
-            then dim_exp word ((strt, (strt + len), 
-                (sub_of len exp [])) :: acc) len (strt + 1)
-            else dim_exp word acc len (strt + 1)
+            then dim_exp word ((sub_of len exp []) :: acc) len
+            else dim_exp word acc len
     in
     let rec all_sub exp len acc =
         if len > List.length exp 
         then acc
-        else all_sub exp (len + 1) ((dim_exp exp [] len 0) @ acc) 
+        else all_sub exp (len + 1) ((dim_exp exp [] len) @ acc)
     in
     all_sub exp 1 []
-
-(** Crée les labels const depuis les substrings *)
-let lab_from_sub sub nodes =
-    let rec string_from_tab tab =
-        match tab with
-        | [] -> ""
-        | c :: word -> c^(string_from_tab word)
-    in
-    match sub with
-    | n1, n2, tab -> 
-        (List.nth nodes n1, List.nth nodes n2, [const (string_from_tab tab)])
-
 
 let rec create_graph_from_line line =
     match line with
