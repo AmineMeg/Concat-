@@ -29,16 +29,17 @@ struct
                 (inter_labs h1 lab2) :: (inter_lab t1 lab2)
 
     (** Intersection d'une arête et d'un ensemble d'arêtes *)
-    let rec inter_verts v vs =
+    let rec in_verts v vs =
+        print_string "Je suis laaaaaaaaaaaaaaaaaaaaaaaaaaa\n";
         match vs with
-        | [] -> raise Not_found
+        | [] -> false
         | h :: t ->
             begin
                 match h, v with
-                | (n1, n2, lab1), (n3, n4, lab2) when n1 = n3 && n2 = n4 ->
-                    (n1, n2, inter_lab lab1 lab2)
+                | (n1, n2, _), (n3, n4, _) when n1 = n3 && n2 = n4 ->
+                    true
                 | _, _ ->
-                    inter_verts v t
+                    in_verts v t
             end
 
     (** Intersection de deux ensembles d'arêtes *)
@@ -47,7 +48,9 @@ struct
             match v1 with 
             | [] -> acc
             | h :: t -> 
-                aux t v2 ((inter_verts h v2) :: acc)
+                if in_verts h v2
+                then aux t v2 (h :: acc)
+                else aux t v2 acc
         in
         aux v1 v2 []
 

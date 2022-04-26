@@ -1,5 +1,6 @@
 open Graph;;
 open AST;;
+open FileTreatment;;
 
 
 (** Convertit une string en tableau de caractères *)
@@ -9,13 +10,6 @@ let explode str =
     else exp (a - 1) (str.[a] :: b)
   in
   exp (String.length str - 1) []
-
-(** Enlève le dernier élément d'une liste *)
-let rec remove_last l =
-    match l with 
-    | [] -> raise Not_found
-    | [_] -> []
-    | h :: t -> h :: (remove_last t)
 
 (** Donne tous les substrings possibles d'une chaîne de caractères et les
     retourne sous la forme d'un index de départ, un index de fin et un 
@@ -55,14 +49,17 @@ let rec lab_from_sub sub nodes =
     match sub with
     | [] -> []
     | (n1, n2, tab) :: t -> 
+        if List.length nodes > n1 && List.length nodes > n2
+       then
         (List.nth nodes n1, List.nth nodes n2, [Const (string_from_tab tab)]) ::
         (lab_from_sub t nodes)
+        else raise Empty
 
 (** Crée le graphe correspondant à une paire d'entrée/sortie *)
 let create_graph_from_line line : Graph.graph =
     match line with
     | (_, exp) ->
-        let nodes = Graph.create_node (String.length exp) []
+        let nodes = Graph.create_node ((String.length exp) + 1) []
         in
         (nodes, lab_from_sub (sub (explode exp)) nodes)
 
@@ -73,3 +70,8 @@ let rec create_graph_from_list file_list =
     | [] -> ([], [])
     | h :: t ->
         Graph.inter (create_graph_from_line h) (create_graph_from_list t)
+
+let create_graph_from file =
+    create_graph_from_list (file_to_list file)
+
+    

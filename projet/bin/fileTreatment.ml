@@ -5,7 +5,7 @@ exception Wrong_input
 (** Convertit un fichier en tableau de paire de string : chaque 
     ligne du fichier est une ligne du tableau elle-même divisée
     en paire (entrée, resultat_attendu)*)
-let from_file_to_list file =
+let file_to_list file =
     let rec split_in_out lines =
         match lines with
         | [] -> []
@@ -23,7 +23,7 @@ let from_file_to_list file =
     et affiche chaque ligne tu tableau en faisant un retour 
     à la ligne : utilisé pour les tests initiaux *)
 let print_file file = 
-    let tab = from_file_to_list file
+    let tab = file_to_list file
     in
     let rec print_line t =
         match t with
