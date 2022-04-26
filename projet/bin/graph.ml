@@ -30,7 +30,6 @@ struct
 
     (** Intersection d'une arête et d'un ensemble d'arêtes *)
     let rec in_verts v vs =
-        print_string "Je suis laaaaaaaaaaaaaaaaaaaaaaaaaaa\n";
         match vs with
         | [] -> false
         | h :: t ->
@@ -81,4 +80,45 @@ struct
         match nb with
         | 0 -> acc
         | _ -> create_node (nb - 1) (Node nb :: acc)
+
+    let print_pos_exp exp =
+        match exp with
+        | Forward n -> print_string "Forward "; print_int n
+        | Backward n -> print_string "Backward "; print_int n
+
+    (** Affiche les labels d'une arête *)
+    let rec print_labs labs =
+        match labs with
+        | [] -> print_string "]"
+        | l :: lt ->
+            begin
+                match l with
+                | Const exp -> print_string exp;print_string "; ";print_labs lt
+                | Extract (p1, p2) ->
+                    print_string "(";
+                    print_pos_exp p1;
+                    print_string ", ";
+                    print_pos_exp p2;
+                    print_string ")";
+                    print_string "; ";
+                    print_labs lt
+            end
+    
+    (** Affiche les arêtes d'un graphe *)
+    let rec print_verts verts =
+        match verts with 
+        | [] -> print_string "\n[end]"
+        | (Node n1, Node n2, labs) :: t ->
+            print_int n1; 
+            print_string " -> "; 
+            print_int n2;
+            print_string " : [";
+            print_labs labs;
+            print_verts t
+
+    (** Affiche un graphe *)
+    let print (graph : graph) =
+        match graph with
+        | _, verts ->
+            print_verts verts
 end
