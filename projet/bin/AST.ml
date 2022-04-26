@@ -1,14 +1,11 @@
-open Sexplib.Std
-open Position
-
-type program = expression located list
+type program = expression list
 
 and expression =
-| const of string
-| extract of pos_expression * pos_expression
+| Const of string
+| Extract of pos_expression * pos_expression
 
 and pos_expression =
-| forward of int
-| backward of int
+| Forward of int
+| Backward of int
 
 

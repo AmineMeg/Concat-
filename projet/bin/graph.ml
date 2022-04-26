@@ -81,3 +81,77 @@ struct
                 (inter_node n1 n2, inter_vert v1 v2)
             end 
 end
+
+open FileTreatment;;
+open AST;;
+
+
+(** Convertit une string en tableau de caractères *)
+let explode str =
+  let rec exp a b =
+    if a < 0 then b
+    else exp (a - 1) (str.[a] :: b)
+  in
+  exp (String.length str - 1) []
+
+(** Enlève le dernier élément d'une liste *)
+let rec remove_last l =
+    match l with 
+    | [] -> raise Not_found
+    | [x] -> []
+    | h :: t -> h :: (remove_last t)
+
+(** Donne tous les substrings possibles d'une chaîne de caractères et les
+    retourne sous la forme d'un index de départ, un index de fin et un 
+    tableau de caractères *)
+let sub exp =
+    let rec sub_of len exp acc =
+        match exp with
+        | [] -> List.rev acc
+        | c :: word -> 
+            if len <= (List.length exp) && len > 0
+            then sub_of (len - 1) word (c :: acc)
+            else List.rev acc
+    in
+    let rec dim_exp exp acc len strt =
+        match exp with
+        | [] -> acc
+        | c :: word -> 
+            if len <= (List.length exp) && len > 0
+            then dim_exp word ((strt, (strt + len), 
+                (sub_of len exp [])) :: acc) len (strt + 1)
+            else dim_exp word acc len (strt + 1)
+    in
+    let rec all_sub exp len acc =
+        if len > List.length exp 
+        then acc
+        else all_sub exp (len + 1) ((dim_exp exp [] len 0) @ acc) 
+    in
+    all_sub exp 1 []
+
+(** Crée les labels const depuis les substrings *)
+let lab_from_sub sub nodes =
+    let rec string_from_tab tab =
+        match tab with
+        | [] -> ""
+        | c :: word -> c^(string_from_tab word)
+    in
+    match sub with
+    | n1, n2, tab -> 
+        (List.nth nodes n1, List.nth nodes n2, [Const (string_from_tab tab)])
+
+
+let rec create_graph_from_line line =
+    match line with
+    | (input, expect) ->
+        let nodes = node_of (String.length expected) []
+        in
+        (nodes, labels_of_stirng (explode expected) (explode input) nodes)
+
+(** Crée un graphe résultant de l'intersection des graphes
+    des différentes lignes du fichier *)
+let rec create_graph_from_list file_list =
+    match file_list with
+    | [] -> ([], [])
+    | h :: t ->
+        inter create_graph_from_line (create_graph_from_list t)
