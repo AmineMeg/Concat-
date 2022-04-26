@@ -1,4 +1,3 @@
-open FileTreatment;;
 open Graph;;
 open AST;;
 
@@ -15,7 +14,7 @@ let explode str =
 let rec remove_last l =
     match l with 
     | [] -> raise Not_found
-    | [x] -> []
+    | [_] -> []
     | h :: t -> h :: (remove_last t)
 
 (** Donne tous les substrings possibles d'une chaîne de caractères et les
@@ -33,7 +32,7 @@ let sub exp =
     let rec dim_exp exp acc len strt =
         match exp with
         | [] -> acc
-        | c :: word -> 
+        | _ :: word -> 
             if len <= (List.length exp) && len > 0
             then dim_exp word ((strt, (strt + len), 
                 (sub_of len exp [])) :: acc) len (strt + 1)
@@ -47,23 +46,25 @@ let sub exp =
     all_sub exp 1 []
 
 (** Crée les labels const depuis les substrings *)
-let lab_from_sub sub nodes =
+let rec lab_from_sub sub nodes =
     let rec string_from_tab tab =
         match tab with
         | [] -> ""
-        | c :: word -> c^(string_from_tab word)
+        | c :: word -> String.make 1 c ^ (string_from_tab word)
     in
     match sub with
-    | n1, n2, tab -> 
-        (List.nth nodes n1, List.nth nodes n2, [const (string_from_tab tab)])
+    | [] -> []
+    | (n1, n2, tab) :: t -> 
+        (List.nth nodes n1, List.nth nodes n2, [Const (string_from_tab tab)]) ::
+        (lab_from_sub t nodes)
 
-
-let rec create_graph_from_line line =
+(** Crée le graphe correspondant à une paire d'entrée/sortie *)
+let create_graph_from_line line : Graph.graph =
     match line with
-    | (input, expect) ->
-        let nodes = node_of (String.length expected) []
+    | (_, exp) ->
+        let nodes = Graph.create_node (String.length exp) []
         in
-        (nodes, labels_of_stirng (explode expected) (explode input) nodes)
+        (nodes, lab_from_sub (sub (explode exp)) nodes)
 
 (** Crée un graphe résultant de l'intersection des graphes
     des différentes lignes du fichier *)
@@ -71,4 +72,4 @@ let rec create_graph_from_list file_list =
     match file_list with
     | [] -> ([], [])
     | h :: t ->
-        inter create_graph_from_line (create_graph_from_list t)
+        Graph.inter (create_graph_from_line h) (create_graph_from_list t)
