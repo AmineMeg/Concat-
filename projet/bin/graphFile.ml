@@ -94,7 +94,7 @@ let rec lab_from_sub sub nodes inp =
         (List.nth nodes n1, 
         List.nth nodes n2, 
         (Const (string_from_tab tab)) :: 
-        (lab_from (indexes_for inp tab) (List.length tab))) ::
+        (lab_from (indexes_for inp tab) (List.length inp))) ::
         (lab_from_sub t nodes inp)
         else raise Empty
 

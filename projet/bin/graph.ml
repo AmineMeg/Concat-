@@ -120,6 +120,7 @@ struct
             print_int n2;
             print_string " : [";
             print_labs labs;
+            print_string "\n";
             print_verts t
 
     (** Affiche un graphe *)
