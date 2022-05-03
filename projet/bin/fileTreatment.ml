@@ -27,7 +27,7 @@ let print_file file =
     in
     let rec print_line t =
         match t with
-        | [] -> print_string "\n[end file]\n\n";
+        | [] -> print_string "\n[END FILE]\n\n";
         | h :: t -> 
             begin 
             match h with
@@ -40,6 +40,6 @@ let print_file file =
                 print_line t;
             end
     in
-    print_string "[begin file]\n";
+    print_string "\n[BEGIN FILE]\n";
     print_line tab
 

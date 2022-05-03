@@ -18,13 +18,14 @@ struct
     (** Affiche les labels d'une arête *)
     let rec print_labs labs =
         match labs with
-        | [] -> print_string "] "
+        | [] -> print_string " "
         | l :: lt ->
             begin
                 match l with
                 | Const exp -> 
-                    print_string "Const ";
+                    print_string "Const \"";
                     print_string exp;
+                    print_string "\"";
                     if lt <> [] 
                     then print_string "; ";
                     print_labs lt
@@ -41,12 +42,12 @@ struct
     (** Affiche les arêtes d'un graphe *)
     let rec print_verts verts =
         match verts with 
-        | [] -> print_string "\n[end graph]\n"
+        | [] -> print_string "[END GRAPH]\n\n"
         | (Node n1, Node n2, labs) :: t ->
             print_int n1; 
             print_string " -> "; 
             print_int n2;
-            print_string " : [";
+            print_string " : ";
             print_labs labs;
             print_string "\n";
             print_verts t
@@ -70,14 +71,14 @@ struct
 
     (** Affiche un graphe *)
     let print (graph : graph) =
-        print_string "[begin graph]\n";
+        print_string "[BEGIN GRAPH]\n";
         match graph with
         | _, verts ->
             print_verts verts
 
     (** Intersection de deux set de la forme (i, j) où i et j sont
     les indexes de début et de fin de la fonction extract *)
-    let inter_set v1 v2 : pos_expression list * pos_expression list =
+    let inter_set v1 v2: pos_expression list * pos_expression list * label list =
         let rec vert_in_set v vs =
             match vs with
             | [] -> None
@@ -98,72 +99,60 @@ struct
                 end
         in
         match v1, v2 with
-        | (p1, p2), (p3, p4) ->
-            (aux p1 p3 [], aux p2 p4 [])
+        | (p1, p2, c1), (p3, p4, c2) ->
+            (aux p1 p3 [], aux p2 p4 [], aux c1 c2 [])
     
     (** Récupère deux ensembles de tous les i et tous les j 
     possibles et renvoie les labels Extract (i, j)  *)
     let get_verts v : label list =
-        print_string "ON RENTRE DANS GET VERTS\n";
-        let rec pair_i i js acc : label list =
-            print_string "ON RENTRE DANS PAIR I\n";
+        (*let rec pair_i i js acc : label list =
             match js with
             | [] -> acc
             | j :: js -> 
                 pair_i i js (Extract (i, j) :: acc)
-        in
+        in*)
         let rec pair_i_j is js acc : label list =
-            print_string "ON RENTRE DANS PAIR I J\n";
-            match is with
-            | [] -> (
-                print_labs acc;
-                print_string "Lab";
-                acc)
-            | i :: is -> 
-                pair_i_j is js (pair_i i js [] @ acc)
+            match is, js with
+            | _, [] -> 
+                acc
+            | [], _ -> 
+                acc
+            | i :: is, j :: js -> 
+                pair_i_j is js (Extract (i, j) :: acc)
         in
         match v with
-        | (is, js) -> pair_i_j is js []
+        | (is, js, cs) -> 
+            pair_i_j is js cs
 
     (** Récupère les labels Extract (i, j) et renvoie deux ensembles
     de tous les i et tous les j possibles *)
     let get_set v =
-        let rec aux v set_i set_j =
+        let rec aux v set_i set_j const=
             match v with
-            | [] -> (set_i, set_j)
-            | h :: t ->
+            | [] -> (set_i, set_j, const)
+            | Extract (i, j) :: t ->
                 begin 
-                match h with
-                | Extract (i, j) -> 
-                    aux t (i :: set_i) (j :: set_j)
-                | _ -> aux t set_i set_j
+                match List.exists (fun x -> i = x) set_i, 
+                List.exists (fun x -> j = x) set_j with
+                | true, true -> aux t set_i set_j const
+                | true, false -> aux t set_i (j :: set_j) const 
+                | false, true -> aux t (i :: set_i) set_j const
+                | false, false -> aux t (i :: set_i) (j :: set_j) const
                 end
+            | h  :: t -> aux t set_i set_j (h :: const)
         in
-        aux v [] []
+        aux v [] [] []
 
     (** Intersection de deux ensembles d'arêtes *)
     let inter_vert v1s v2s nodes len : vert list =
-        print_string "ON RENTRE DANS INTER\n";
-        let rec inter_v_vs v1 v2s nodes len acc =
+        let rec inter_v_vs v1 v2s nodes len acc : vert list =
             match v1, v2s with
-            | _, [] -> acc
+            | _, [] -> 
+                acc
             | (Node i1, Node i2, lab1), (Node i3, Node i4, lab2) :: v2s ->
-                print_string "i2 : ";
-                print_int i2;
-                print_string "\ni4 : ";
-                print_int i4;
-                print_string "\nlen : ";
-                print_int (List.length nodes);
-                print_node nodes;
-                print_string "i1*(List.length v2s)+i3 : ";
-                print_int (i1*(len)+i3);
-                print_node [List.nth nodes (i1* len +i3)];
-                print_string "\ni2*(List.length v2s)+i4 : ";
-                print_int (i2*(len)+i4);
-                print_node [List.nth nodes (i2* len +i4)];
                 inter_v_vs v1 v2s nodes len
-                ((List.nth  nodes (i1*(List.length v2s)+i3),
-                List.nth nodes (i2*(List.length v2s)+i4),
+                ((List.nth  nodes (i1 * len + i3),
+                List.nth nodes (i2 * len + i4),
                 get_verts (inter_set (get_set lab1) (get_set lab2))) :: acc)
         in 
         let rec inter_vs_vs v1s v2s nodes len acc =
