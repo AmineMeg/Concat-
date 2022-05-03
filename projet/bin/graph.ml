@@ -76,6 +76,40 @@ struct
         | _, verts ->
             print_verts verts
 
+    let rec reachable_nodes vs start_node =
+        let rec reachable_nodes_from_n vs start_node n =
+            match vs with
+            | [] -> start_node
+            | (n1, n2, _) :: vs -> 
+                if n=n1 && not (List.exists (fun x -> x = n2) start_node)
+                then reachable_nodes vs (n2 :: start_node)
+                else reachable_nodes_from_n vs start_node n
+        in
+        let rec aux vs start_node ns acc =
+            match ns with
+            | [] -> acc
+            | n :: ns ->
+                aux vs start_node ns (reachable_nodes_from_n vs start_node n @ acc)
+        in
+        match vs with
+        | [] ->  start_node
+        | _ -> aux vs start_node start_node []
+
+
+    let clean_graph g =
+        let rec clean_verts vs acc =
+            match vs with
+            | [] -> acc
+            | (_, _, []) :: vs ->
+                clean_verts vs acc
+            | v :: vs ->
+                clean_verts vs (v :: acc)
+        in
+        match g with
+        | ns, vs ->
+            print_node (reachable_nodes (clean_verts vs []) ns);
+            ns, (clean_verts vs [])
+
     (** Intersection de deux set de la forme (i, j) où i et j sont
     les indexes de début et de fin de la fonction extract *)
     let inter_set v1 v2: pos_expression list * pos_expression list * label list =
@@ -192,7 +226,7 @@ struct
                 in
                 print g1;
                 print g2;
-                (nodes, inter_vert v1 v2 nodes (List.length n2))
+                clean_graph (nodes, inter_vert v1 v2 nodes (List.length n2))
             end 
 
     (** Crée une liste avec le nombre de noeuds passé en paramètre + 1 *)
