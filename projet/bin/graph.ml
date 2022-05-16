@@ -119,14 +119,14 @@ struct
         aux vs [] start_node start_node
 
     (** Renvoie une liste où tous les noeuds sont à 100 sauf le 
-    noeud initial 
-    let init nds =
+    noeud initial *)
+    let init_dist nds =
         let rec create_list i nb =
             match nb with
             | 0 -> []
             | _ -> i :: (create_list i (nb - 1))
         in
-        let init_node dis nds n =
+        let rec init_node dis ns n =
             match dis, ns with
             | d :: dis, Node nd :: nds  when n=nd ->
                 0 :: dis
@@ -149,7 +149,16 @@ struct
             | [], [] -> min, n_min
             | _, _ -> raise Not_found
         in
-        aux ns ds 100 -1 0
+        aux ns ds (-1) 0
+
+    (** Retourne la distance actuelle du noeud *)
+    let rec get_weight_of_vert n dist nodes=
+        match dist, nodes with
+        | d1 :: dist, n1 :: nodes when n=n1 ->
+            d1
+        | d1 :: dist, n1 :: nodes -> 
+            get_weight_of_vert n dist nodes
+        | _, _ -> raise (Invalid_argument ("Ici on attend des listes de même longueur"))
 
     (** Met à jour les distances *)
     let update n nodes dist vs pred =
@@ -158,9 +167,9 @@ struct
             | (vs_n1, vs_n2, labs) :: vs ->
                 if vs_n1 = n1 && vs_n2 = n2 
                 then 
-                    if poids_labs labs + poids_noeud n1 dist < poids_noeud n2 dist
+                    if get_weight_of_vert labs + weight_node n1 dist nodes < weight_node n2 dist nodes
                     then
-                        update_dist n2 (poids_labs labs + poids_noeud n1 dist),
+                        update_dist n2 (get_weight_of_vert labs + weight_node n1 dist nodes),
                         update_pred pred n2 n1
                     else dist, pred
                 else update_from_to n1 n2 vs dist pred
@@ -168,27 +177,30 @@ struct
         match nodes with
         | [] -> dist, pred
         | node :: nodes -> 
-            update n nodes (update_from_to n node vs dist) vs 
+            (minus nodes [n]), update n nodes (update_from_to n node vs dist) vs 
 
 
 
     let dijkstra g =
-        let aux ns vs dist pred =
-            match smallest ns dist with
-            | min, n_min -> 
-                remove ns n_min;
-                update n_min ns dist vs pred
+        let init_dist ns i =
+            match ns with
+            | [] -> []
+            | Node n :: t -> 
+                if n = i 
+                then 0 :: (init_dist t i)
+                else 100 :: (init_dist t i)
+        in
+        let init ns i =
+            (ns, init_dist ns i, ns)
+        in
+        let aux ns vs trip =
+            match trip with
+            | (partition, dist, pred) ->
+                update (smallest partition dist) ns dist vs pred
         in
         match g with
         | ns, vs ->
-            begin
-            
-            end
-        on prend de p :
-            smallest ns (init ns) -> couple plus petit la
-        on enleve le noeud de p
-        pour chaque noeud dans p on met à jour la distance*)
-
+            aux ns vs (init ns 0)
             
 
     (** Intersection de deux set de la forme (i, j) où i et j sont
