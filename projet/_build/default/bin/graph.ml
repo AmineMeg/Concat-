@@ -216,6 +216,8 @@ struct
         | node :: nodes -> 
             (minus nodes [n]), update_rec n nodes (update_from_to n node vs dist pred) vs 
 
+
+
     let dijkstra g =
         let rec init_dist ns i =
             match ns with
@@ -236,20 +238,6 @@ struct
         match g with
         | ns, vs ->
             aux ns vs (init ns 0)
-
-    let concat g f =
-        let rec concat_prog pred f vs =
-            match pred with
-            | Node n when n=f ->
-                
-        in
-        let concat_dij g ns vs f =
-            match g with
-            | part, dist, pred ->
-                concat_prog pred f vs
-        in
-        match g with
-        | ns, vs -> concat_dij (dijkstra g) ns vs f
             
 
     (** Intersection de deux set de la forme (i, j) où i et j sont
