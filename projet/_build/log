@@ -1,10 +1,10 @@
 # dune build
 # OCAMLPARAM: unset
-# Workspace root: "/home/elsa/Master 1/pfa-2022/projet"
-$ /usr/bin/nproc > /tmp/dune28bc08.output 2> /dev/null
+# Workspace root: /mnt/c/Users/kreek/OneDrive/Documents/Cours/2021/S2/PFA/pfa-2022/projet
+$ /usr/bin/nproc > /tmp/dune45bb7e.output 2> /dev/null
 # Auto-detected concurrency: 8
 # disable binary cache
-$ /home/elsa/.opam/4.13.1/bin/ocamlc.opt -config > /tmp/dunedba4af.output
+$ /usr/bin/ocamlc.opt -config > /tmp/dunebf619c.output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -13,24 +13,30 @@ $ /home/elsa/.opam/4.13.1/bin/ocamlc.opt -config > /tmp/dunedba4af.output
 #  ; for_host = None
 #  ; fdo_target_exe = None
 #  ; build_dir = "default"
-#  ; toplevel_path = Some External "/home/elsa/.opam/4.13.1/lib/toplevel"
-#  ; ocaml_bin = External "/home/elsa/.opam/4.13.1/bin"
-#  ; ocaml = External "/home/elsa/.opam/4.13.1/bin/ocaml"
-#  ; ocamlc = External "/home/elsa/.opam/4.13.1/bin/ocamlc.opt"
-#  ; ocamlopt = Some External "/home/elsa/.opam/4.13.1/bin/ocamlopt.opt"
-#  ; ocamldep = External "/home/elsa/.opam/4.13.1/bin/ocamldep.opt"
-#  ; ocamlmklib = External "/home/elsa/.opam/4.13.1/bin/ocamlmklib.opt"
+#  ; toplevel_path = None
+#  ; ocaml_bin = External "/usr/bin"
+#  ; ocaml = External "/usr/bin/ocaml"
+#  ; ocamlc = External "/usr/bin/ocamlc.opt"
+#  ; ocamlopt = Some External "/usr/bin/ocamlopt.opt"
+#  ; ocamldep = External "/usr/bin/ocamldep.opt"
+#  ; ocamlmklib = External "/usr/bin/ocamlmklib.opt"
 #  ;
 #  env =
 #    map
-#      { "DUNE_CONFIGURATOR" : "/home/elsa/.opam/4.13.1/bin/ocamlc.opt"
+#      {
+#      "CAML_LD_LIBRARY_PATH" :
+#        "/mnt/c/Users/kreek/OneDrive/Documents/Cours/2021/S2/PFA/pfa-2022/projet/_build/install/default/lib/stublibs"
+#      ; "DUNE_CONFIGURATOR" : "/usr/bin/ocamlc.opt"
 #      ; "INSIDE_DUNE" : "1"
 #      ;
+#      "MANPATH" :
+#        "/mnt/c/Users/kreek/OneDrive/Documents/Cours/2021/S2/PFA/pfa-2022/projet/_build/install/default/bin"
+#      ;
 #      "OCAMLFIND_IGNORE_DUPS_IN" :
-#        "/home/elsa/Master 1/pfa-2022/projet/_build/install/default/lib"
+#        "/mnt/c/Users/kreek/OneDrive/Documents/Cours/2021/S2/PFA/pfa-2022/projet/_build/install/default/lib"
 #      ;
 #      "OCAMLPATH" :
-#        "/home/elsa/Master 1/pfa-2022/projet/_build/install/default/lib"
+#        "/mnt/c/Users/kreek/OneDrive/Documents/Cours/2021/S2/PFA/pfa-2022/projet/_build/install/default/lib"
 #      ; "OCAML_COLOR" : "always"
 #      ; "OPAMCOLOR" : "always"
 #      }
@@ -41,47 +47,42 @@ $ /home/elsa/.opam/4.13.1/bin/ocamlc.opt -config > /tmp/dunedba4af.output
 #  ; opam_vars = map {}
 #  ;
 #  ocaml_config =
-#    { version = "4.13.1"
-#    ; standard_library_default = "/home/elsa/.opam/4.13.1/lib/ocaml"
-#    ; standard_library = "/home/elsa/.opam/4.13.1/lib/ocaml"
+#    { version = "4.08.1"
+#    ; standard_library_default = "/usr/lib/ocaml"
+#    ; standard_library = "/usr/lib/ocaml"
 #    ; standard_runtime = "the_standard_runtime_variable_was_deleted"
 #    ; ccomp_type = "cc"
-#    ; c_compiler = "gcc"
-#    ;
-#    ocamlc_cflags =
-#      [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
-#    ;
-#    ocamlopt_cflags =
-#      [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
+#    ; c_compiler = "x86_64-linux-gnu-gcc"
+#    ; ocamlc_cflags = [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-fPIC" ]
+#    ; ocamlopt_cflags = [ "-O2"; "-fno-strict-aliasing"; "-fwrapv" ]
 #    ;
 #    bytecomp_c_compiler =
-#      [ "gcc"
+#      [ "x86_64-linux-gnu-gcc"
 #      ; "-O2"
 #      ; "-fno-strict-aliasing"
 #      ; "-fwrapv"
-#      ; "-pthread"
 #      ; "-fPIC"
 #      ; "-D_FILE_OFFSET_BITS=64"
+#      ; "-D_REENTRANT"
 #      ]
 #    ; bytecomp_c_libraries = [ "-lm"; "-ldl"; "-lpthread" ]
 #    ;
 #    native_c_compiler =
-#      [ "gcc"
+#      [ "x86_64-linux-gnu-gcc"
 #      ; "-O2"
 #      ; "-fno-strict-aliasing"
 #      ; "-fwrapv"
-#      ; "-pthread"
-#      ; "-fPIC"
 #      ; "-D_FILE_OFFSET_BITS=64"
+#      ; "-D_REENTRANT"
 #      ]
 #    ; native_c_libraries = [ "-lm"; "-ldl" ]
-#    ; cc_profile = []
+#    ; cc_profile = [ "-pg" ]
 #    ; architecture = "amd64"
 #    ; model = "default"
 #    ; int_size = 63
 #    ; word_size = 64
 #    ; system = "linux"
-#    ; asm = [ "as" ]
+#    ; asm = [ "x86_64-linux-gnu-as" ]
 #    ; asm_cfi_supported = true
 #    ; with_frame_pointers = false
 #    ; ext_exe = ""
@@ -94,20 +95,20 @@ $ /home/elsa/.opam/4.13.1/bin/ocamlc.opt -config > /tmp/dunedba4af.output
 #    ; systhread_supported = true
 #    ; host = "x86_64-pc-linux-gnu"
 #    ; target = "x86_64-pc-linux-gnu"
-#    ; profiling = false
+#    ; profiling = true
 #    ; flambda = false
 #    ; spacetime = false
-#    ; safe_string = true
-#    ; exec_magic_number = "Caml1999X030"
-#    ; cmi_magic_number = "Caml1999I030"
-#    ; cmo_magic_number = "Caml1999O030"
-#    ; cma_magic_number = "Caml1999A030"
-#    ; cmx_magic_number = "Caml1999Y030"
-#    ; cmxa_magic_number = "Caml1999Z030"
-#    ; ast_impl_magic_number = "Caml1999M030"
-#    ; ast_intf_magic_number = "Caml1999N030"
-#    ; cmxs_magic_number = "Caml1999D030"
-#    ; cmt_magic_number = "Caml1999T030"
+#    ; safe_string = false
+#    ; exec_magic_number = "Caml1999X025"
+#    ; cmi_magic_number = "Caml1999I025"
+#    ; cmo_magic_number = "Caml1999O025"
+#    ; cma_magic_number = "Caml1999A025"
+#    ; cmx_magic_number = "Caml1999Y025"
+#    ; cmxa_magic_number = "Caml1999Z025"
+#    ; ast_impl_magic_number = "Caml1999M025"
+#    ; ast_intf_magic_number = "Caml1999N025"
+#    ; cmxs_magic_number = "Caml1999D025"
+#    ; cmt_magic_number = "Caml1999T025"
 #    ; natdynlink_supported = true
 #    ; supports_shared_libraries = true
 #    ; windows_unicode = false
@@ -115,18 +116,12 @@ $ /home/elsa/.opam/4.13.1/bin/ocamlc.opt -config > /tmp/dunedba4af.output
 #  ;
 #  which =
 #    map
-#      { "ocaml" : Some External "/home/elsa/.opam/4.13.1/bin/ocaml"
-#      ; "ocamlc" : Some External "/home/elsa/.opam/4.13.1/bin/ocamlc.opt"
-#      ;
-#      "ocamlobjinfo" :
-#        Some External "/home/elsa/.opam/4.13.1/bin/ocamlobjinfo.opt"
+#      { "ocaml" : Some External "/usr/bin/ocaml"
+#      ; "ocamlc" : Some External "/usr/bin/ocamlc.opt"
+#      ; "ocamlobjinfo" : Some External "/usr/bin/ocamlobjinfo.opt"
 #      }
 #  }
-$ (cd _build/default && /home/elsa/.opam/4.13.1/bin/ocamldep.opt -modules -impl bin/graph.ml) > _build/default/bin/.main.eobjs/graph.ml.d
-$ (cd _build/default && /home/elsa/.opam/4.13.1/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I bin/.main.eobjs/byte -I lib/.projet.objs/byte -I lib/.projet.objs/native -no-alias-deps -opaque -open Dune__exe -o bin/.main.eobjs/byte/dune__exe__Graph.cmo -c -impl bin/graph.ml)
-$ (cd _build/default && /home/elsa/.opam/4.13.1/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I bin/.main.eobjs/byte -I lib/.projet.objs/byte -I lib/.projet.objs/native -no-alias-deps -opaque -open Dune__exe -o bin/.main.eobjs/byte/dune__exe__GraphFile.cmo -c -impl bin/graphFile.ml)
-$ (cd _build/default && /home/elsa/.opam/4.13.1/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I bin/.main.eobjs/byte -I lib/.projet.objs/byte -I lib/.projet.objs/native -no-alias-deps -opaque -open Dune__exe -o bin/.main.eobjs/byte/dune__exe__Main.cmo -c -impl bin/main.ml)
-$ (cd _build/default && /home/elsa/.opam/4.13.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I lib/.projet.objs/byte -I lib/.projet.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o bin/.main.eobjs/native/dune__exe__Graph.cmx -c -impl bin/graph.ml)
-$ (cd _build/default && /home/elsa/.opam/4.13.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I lib/.projet.objs/byte -I lib/.projet.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o bin/.main.eobjs/native/dune__exe__Main.cmx -c -impl bin/main.ml)
-$ (cd _build/default && /home/elsa/.opam/4.13.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I lib/.projet.objs/byte -I lib/.projet.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o bin/.main.eobjs/native/dune__exe__GraphFile.cmx -c -impl bin/graphFile.ml)
-$ (cd _build/default && /home/elsa/.opam/4.13.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o bin/main.exe lib/projet.cmxa bin/.main.eobjs/native/dune__exe.cmx bin/.main.eobjs/native/dune__exe__AST.cmx bin/.main.eobjs/native/dune__exe__FileReader.cmx bin/.main.eobjs/native/dune__exe__FileTreatment.cmx bin/.main.eobjs/native/dune__exe__Graph.cmx bin/.main.eobjs/native/dune__exe__GraphFile.cmx bin/.main.eobjs/native/dune__exe__Main.cmx)
+$ (cd _build/default && /usr/bin/ocamldep.opt -modules -impl bin/main.ml) > _build/default/bin/.main.eobjs/main.ml.d
+$ (cd _build/default && /usr/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I bin/.main.eobjs/byte -I lib/.projet.objs/byte -I lib/.projet.objs/native -no-alias-deps -opaque -open Dune__exe -o bin/.main.eobjs/byte/dune__exe__Main.cmo -c -impl bin/main.ml)
+$ (cd _build/default && /usr/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I lib/.projet.objs/byte -I lib/.projet.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o bin/.main.eobjs/native/dune__exe__Main.cmx -c -impl bin/main.ml)
+$ (cd _build/default && /usr/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o bin/main.exe lib/projet.cmxa bin/.main.eobjs/native/dune__exe.cmx bin/.main.eobjs/native/dune__exe__AST.cmx bin/.main.eobjs/native/dune__exe__FileReader.cmx bin/.main.eobjs/native/dune__exe__FileTreatment.cmx bin/.main.eobjs/native/dune__exe__Graph.cmx bin/.main.eobjs/native/dune__exe__GraphFile.cmx bin/.main.eobjs/native/dune__exe__Main.cmx)

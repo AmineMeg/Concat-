@@ -9,6 +9,18 @@ struct
     type vert = node * node * label list
     type graph = node list * vert list
 
+
+    (** Donnne le poids d'une arete *)
+    let get_weight_of_label l =
+        let get_weight_of_a_single_label _l=
+            match _l with 
+                |Const(_) -> 1
+                |Extract(_) -> 2
+    in match l with
+    |([]) -> raise (Invalid_argument ("label n'a pas la bonne taille"))
+    |(h::[]) -> get_weight_of_a_single_label h
+    |(_::_) -> raise (Invalid_argument ("label n'a pas la bonne taille"))
+
     (** Affiche les pos_exp *)
     let print_pos_exp exp =
         match exp with
