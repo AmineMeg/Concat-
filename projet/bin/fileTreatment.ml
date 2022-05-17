@@ -41,6 +41,6 @@ let print_file file =
                 print_line t;
             end
     in
-    print_string "\n[BEGIN FILE]\n";
+    print_string "[BEGIN FILE]\n";
     print_line tab
 

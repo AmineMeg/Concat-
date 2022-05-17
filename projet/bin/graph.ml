@@ -132,14 +132,15 @@ struct
         aux (List.hd part) (List.hd (ds_part part ds)) (ds_part part ds) part
 
     (** Donnne le poids d'une arête *)
-    let get_weight_of l =
-        let get_weight_of_a_single_label _l=
+    let get_weight_of l len =
+        let get_weight_of_a_single_label _l len=
             match _l with 
-                |Const(_) -> 1
-                |Extract(_) -> 2
-        in match l with
+                |Const(_) -> len + 1
+                |Extract(_, _) -> len
+        in 
+        match l with
         |([]) -> raise (Invalid_argument ("label n'a pas la bonne taille"))
-        |(h::[]) -> get_weight_of_a_single_label h
+        |(h::[]) -> get_weight_of_a_single_label h len
         |(_::_) -> raise (Invalid_argument ("label n'a pas la bonne taille"))
 
 
@@ -162,6 +163,10 @@ struct
         match n with
         | Node n -> set_int n v list
 
+    let vert_bet_nodes n1 n2 =
+        match n1, n2 with
+        | Node n1, Node n2 -> n2 - n1
+
     (** Met à jour les distances *)
     let rec update small ns vs dt_pd =
         (* Met à jour le poids du noeud n si necéssaire en partant de
@@ -169,9 +174,10 @@ struct
         let rec update_from_to small n vs dt_pd =
             match vs, dt_pd with
             | (n1, n2, labs) :: _, (dt, pd) when n1=small && n2=n ->
-                if get_weight_of labs + nth_node n1 dt < nth_node n2 dt 
+                let len = vert_bet_nodes n1 n2 in
+                if get_weight_of labs len + nth_node n1 dt < nth_node n2 dt 
                 then 
-                    set_node n2 (get_weight_of labs + nth_node n1 dt) dt,
+                    set_node n2 (get_weight_of labs len + nth_node n1 dt) dt,
                     set_node n2 n1 pd
                 else (dt, pd)
             | _ :: vs, (_, _) ->
@@ -396,9 +402,23 @@ struct
 
     (** Ne laisse qu'une pos_exp par arête *)
     let clean_graph g =
+        let rec sort ns acc =
+            let rec insert e ns =
+                match ns, e with
+                | Node n :: _, Node en when en <n -> 
+                    e :: ns
+                | n :: t, _ -> 
+                    n :: (insert e t)
+                | [], _ -> [e]
+            in
+            match ns with
+            | [] -> acc
+            | h :: t ->
+                sort t (insert h acc)
+        in
         let reach ns vs =
             match ns with
-            | n :: _ -> reachable_nodes vs [n]
+            | n :: _ -> sort (reachable_nodes vs [n]) []
             | [] -> raise Empty 
         in
         let rec clean_verts vs ns =
@@ -414,7 +434,7 @@ struct
         match g with 
         | ns, vs ->
             let nodes =
-                List.rev (reach ns vs)
+                reach ns vs
             in
             rename (nodes, clean_verts vs nodes)
 
@@ -428,12 +448,12 @@ struct
                 let nodes =
                     inter_node n1 n2
                 in
-                print_string "\n\nINTERSECTION DU GRAPHE :\n";
+                (*print_string "\n\nINTERSECTION DU GRAPHE :\n";
                 print g1;
                 print_string "\n\nET DU GRAPHE :\n";
                 print g2;
                 print_string "\n\nINTERSECTION :\n";
-                print (clean_graph (nodes, inter_vert v1 v2 nodes (List.length n2)));
+                print (clean_graph (nodes, inter_vert v1 v2 nodes (List.length n2)));*)
                 clean_graph (nodes, inter_vert v1 v2 nodes (List.length n2))
             end   
 end
