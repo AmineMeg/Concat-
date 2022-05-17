@@ -21,8 +21,8 @@ Pour build le projet:
 ## Utilisation
 * Votre programme `genconcat` accepte les modes suivants de fonctionnement :
 
-    - `dune build projet -- genconcat <fichier>` affiche le programme Concat qui a ete produit à partir du contenu de `<fichier>`.
+    - `$ ./dune build projet -- genconcat <fichier>` affiche le programme Concat qui a ete produit à partir du contenu de `<fichier>`.
       Voir le répertoire `projet/exemples` pour des exemples de fichiers à traiter
 
-    - `dune build projet --genconcat <fichier1> <fichier2>` crée un programme Concat à partir du contenu de <fichier1> (contenant des lignes "input output") puis utiliser ce programme sur <fichier2>. Celui-ci ne contiendra que des lignes "input", et vous devrez afficher chaque "output" calculé correspondant, un par ligne.
+    - `$ ./dune build projet --genconcat <fichier1> <fichier2>` crée un programme Concat à partir du contenu de <fichier1> (contenant des lignes "input output") puis utiliser ce programme sur <fichier2>. Celui-ci ne contiendra que des lignes "input", et vous devrez afficher chaque "output" calculé correspondant, un par ligne.
 
