@@ -1,11 +1,11 @@
 open FileTreatment;;
 open GraphFile;;
-open Graph;;
 (*open AST;;*)
 
 let () =
     print_endline "Hello, World!";
-    let file = "exemples/etape1/example_enonce"
+    let file = "exemples/etape1/date_verbose"
     in
     print_file file;
-    Graph.print (create_graph_from file);;
+    print_string "APRES DIJKSTRA \n";
+    create_prog_from file ;;

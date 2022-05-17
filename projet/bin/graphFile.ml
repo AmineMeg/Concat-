@@ -119,4 +119,9 @@ let rec create_graph_from_list file_list =
 let create_graph_from file =
     create_graph_from_list (file_to_list file)
 
+let create_prog_from file =
+    print_string "PROGRAMME FINAL \n";
+    Graph.print_labs (List.rev (Graph.concat (create_graph_from file)));
+    print_string "\n"
+
     

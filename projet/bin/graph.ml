@@ -56,7 +56,7 @@ struct
     let print_node n = 
         let rec aux n =
             match n with 
-            | [] -> print_string "[FIN]\n\n"
+            | [] -> print_string "[END NODE]\n"
             | h :: t ->
                 begin match h with
                 | Node h -> 
@@ -66,14 +66,15 @@ struct
                     aux t
                 end
         in
-        print_string "[DEBUT NODE] ";
+        print_string "[BEGIN NODE] ";
         aux n
 
     (** Affiche un graphe *)
     let print (graph : graph) =
         print_string "[BEGIN GRAPH]\n";
         match graph with
-        | _, verts ->
+        | n, verts ->
+            print_node n;
             print_verts verts
 
     (** Retourne la liste ns1 sans les éléments de ns2 *)
@@ -115,7 +116,6 @@ struct
                 (non_visited @ (minus (minus new_start non_visited) visited)) 
                 (new_start)
         in
-        print_node (aux vs [] start_node start_node);
         aux vs [] start_node start_node
 
     (** Renvoie une liste où tous les noeuds sont à 100 sauf le 
@@ -139,20 +139,26 @@ struct
 
     (** Renvoie le couple (noeud, distance) de la plus petite 
     distance *)
-    let smallest ns ds : node =
-        let rec aux ns ds min n_min : node =
-            match ns, ds with
-            | n :: ns, d :: ds ->
-                if d < min
-                then aux ns ds d n 
-                else aux ns ds min n_min
-            | [], [] -> n_min
-            | _, _ -> raise Not_found
+    let smallest part ds =
+        let rec ds_part part ds =
+            match part with 
+            | [] -> []
+            | Node n :: part -> 
+                List.nth ds n :: (ds_part part ds)
         in
-        aux ns ds (-1) (List.hd ns)
+        let rec aux min_node min ds part =
+            match ds, part with
+            | [], [] -> min_node
+            | h :: ds, p :: part when h<min-> 
+                aux p h ds part
+            | _ :: ds, _ :: part ->
+                aux min_node min ds part
+            | _, _ -> raise (Invalid_argument "smallest")
+        in
+        aux (List.hd part) (List.hd (ds_part part ds)) (ds_part part ds) part
 
     (** Donnne le poids d'une arete *)
-    let get_weight_of_label l =
+    let get_weight_of l =
         let get_weight_of_a_single_label _l=
             match _l with 
                 |Const(_) -> 1
@@ -164,57 +170,47 @@ struct
 
 
     (** Retourne la distance actuelle du noeud *)
-    let rec weight_node n dist nodes=
-        match dist, nodes with
-        | d1 :: _, n1 :: _ when n=n1 ->
-            d1
-        | _ :: dist, _ :: nodes -> 
-            weight_node n dist nodes
-        | _, _ -> raise (Invalid_argument ("Ici on attend des listes de même longueur"))
+    let nth_node n list =
+        match n with
+        | Node n -> List.nth list n 
+
+    (** Retourne une list avec la valeur v à l'indice n *)
+    let set_node n v list =
+        let rec set_int n v list =
+            match list with
+            | [] -> raise (Invalid_argument "index out of bounds")
+            | _ :: t when n=0 -> 
+                v :: t
+            | h :: t -> 
+                h :: set_int (n - 1) v t
+        in
+        match n with
+        | Node n -> set_int n v list
 
     (** Met à jour les distances *)
-    let rec update_dist nodes dist n w : int list =
-        match nodes, dist with
-        | n1 :: _, d :: dist when n1=n -> 
-            (d + w) :: dist
-        | n :: nodes, d :: dist -> 
-            d :: (update_dist nodes dist n w)
-        | _, _ -> raise (Invalid_argument ("Problèmes node/distance"))
-
-    (** Met à jour les predecesseurs *)
-    let rec update_pred nodes pred n2 n1 =
-        match nodes, pred with
-        | n :: _, _ :: pred when n2=n ->
-            n1 :: pred
-        | _ :: nodes, _ :: pred ->
-            update_pred nodes pred n2 n1
-        | _, _ -> raise (Invalid_argument ("Problèmes node/distance"))
-
-    (** Met à jour les distances *)
-    let update n nodes (dist: int list) vs pred =
-        let rec update_from_to n1 n2 vs dist (pred: node list) =
-            match vs with
-            | (vs_n1, vs_n2, labs) :: vs ->
-                if vs_n1 = n1 && vs_n2 = n2 
+    let rec update small ns vs dt_pd =
+        (* small est le minimum duquel on part *)
+        let rec update_from_to small n vs dt_pd =
+            match vs, dt_pd with
+            | (n1, n2, labs) :: _, (dt, pd) when n1=small && n2=n ->
+                if get_weight_of labs + nth_node n1 dt < nth_node n2 dt 
                 then 
-                    if get_weight_of_label labs + weight_node n1 dist nodes < weight_node n2 dist nodes
-                    then
-                        update_dist nodes dist n2 (get_weight_of_label labs + weight_node n1 dist nodes),
-                        update_pred nodes pred n2 n1
-                    else dist, pred
-                else update_from_to n1 n2 vs dist pred
-            | [] -> raise Empty
+                    set_node n2 (get_weight_of labs + nth_node n1 dt) dt,
+                    set_node n2 n1 pd
+                else (dt, pd)
+            | _ :: vs, (_, _) ->
+                update_from_to small n vs dt_pd 
+            | [], (_, _) -> 
+                dt_pd
         in
-        let rec update_rec n nodes dis_pre vs  =
-            match nodes, dis_pre with
-            | [], (dist, pred) -> dist, pred
-            | node :: nodes, (dist, pred) -> 
-                update_rec n nodes (update_from_to n node vs dist pred) vs 
-        in
-        match nodes with
-        | [] -> raise Empty
-        | node :: nodes -> 
-            (minus nodes [n]), update_rec n nodes (update_from_to n node vs dist pred) vs 
+        (* on veut matcher small avec tous les autres noeuds existants *)
+        match ns with
+        | n :: ns when n<>small ->
+            update small ns vs (update_from_to small n vs dt_pd)
+        | _ :: ns ->
+            update small ns vs dt_pd 
+        | [] -> dt_pd
+
 
     let dijkstra g =
         let rec init_dist ns i =
@@ -226,30 +222,43 @@ struct
                 else 100 :: (init_dist t i)
         in
         let init ns i =
-            (ns, init_dist ns i, ns)
+            (init_dist ns i, ns)
         in
-        let aux ns vs trip =
-            match trip with
-            | (partition, dist, pred) ->
-                update (smallest partition dist) ns dist vs pred
+        let rec tant_que part ns vs dt_pd =
+            let small : node= 
+                match part, dt_pd with
+                | [], _ -> Node 0
+                | _, (dt, _) -> smallest part dt
+            in
+            match part with
+            | [] -> dt_pd
+            | _ ->
+                tant_que (minus part [small]) ns vs (update small ns vs dt_pd)
         in
         match g with
         | ns, vs ->
-            aux ns vs (init ns 0)
+            begin
+            match tant_que ns ns vs (init ns 0) with
+            | _, pd -> pd
+            end
 
-    let concat g f =
-        let rec concat_prog pred f vs =
-            match pred with
-            | Node n when n=f ->
-                
+    let concat g =
+        let rec concat_prog pred vs vs_init nth =
+            match vs, (List.nth pred nth) with
+            | _, Node n3  when nth=n3 ->
+                []
+            | (Node n1, Node n2, [lab]) :: _, Node n3 when n2=nth && n1=n3 ->
+                lab :: concat_prog pred vs_init vs_init n3
+            | _ :: vs , _ -> 
+                concat_prog pred vs vs_init nth
+            | _, _ ->
+                raise (Invalid_argument "concat")
         in
-        let concat_dij g ns vs f =
-            match g with
-            | part, dist, pred ->
-                concat_prog pred f vs
+        let concat_dij pred vs =
+            concat_prog pred vs vs (List.length pred - 1)
         in
         match g with
-        | ns, vs -> concat_dij (dijkstra g) ns vs f
+        | _, vs -> concat_dij (dijkstra g) vs 
             
 
     (** Intersection de deux set de la forme (i, j) où i et j sont
@@ -353,8 +362,34 @@ struct
             | Node i1 :: n1s ->
                 inter_ns_ns n1s n2s (inter_n_ns i1 n2s (List.length n2s) [] @ acc)
         in
-        print_node (List.rev (inter_ns_ns n1s n2s []));
         List.rev (inter_ns_ns n1s n2s [])
+
+    (** Crée une liste avec le nombre de noeuds passé en paramètre + 1 *)
+    let rec create_node nb acc =
+        match nb with
+        | 0 -> Node 0 :: acc
+        | _ -> create_node (nb - 1) (Node nb :: acc)
+
+    let rename g =
+        let rec rename_vs nodes corres vs =
+            match vs with
+            | [] -> [] 
+            | (n1, n2, lab) :: vs -> 
+                (List.nth nodes (List.assoc n1 corres), 
+                List.nth nodes (List.assoc n2 corres),
+                lab) :: (rename_vs nodes corres vs)
+        in
+        let rec rename_node ns nb =
+            match ns with
+            | [] -> []
+            | n :: ns ->
+                (n, nb) :: rename_node ns (nb + 1)          
+        in
+        match g with
+        | ns, vs -> 
+            let nodes = create_node (List.length ns - 1) []
+            in 
+            nodes, rename_vs nodes (rename_node ns 0) vs
 
     (** Ne laisse qu'une pos_exp par arête *)
     let clean_graph g =
@@ -375,7 +410,10 @@ struct
         in
         match g with 
         | ns, vs ->
-            reach ns vs, clean_verts vs (reach ns vs)
+            let nodes =
+                List.rev (reach ns vs)
+            in
+            rename (nodes, clean_verts vs nodes)
 
     (** Intersection de deux graphes *)
     let inter (g1:graph) (g2:graph) : graph = 
@@ -387,16 +425,16 @@ struct
                 let nodes =
                     inter_node n1 n2
                 in
+                print_string "\n\nINTERSECTION DU GRAPHE :\n";
                 print g1;
+                print_string "\n\nET DU GRAPHE :\n";
                 print g2;
+                print_string "\n\nINTERSECTION :\n";
+                print (clean_graph (nodes, inter_vert v1 v2 nodes (List.length n2)));
                 clean_graph (nodes, inter_vert v1 v2 nodes (List.length n2))
             end 
 
-    (** Crée une liste avec le nombre de noeuds passé en paramètre + 1 *)
-    let rec create_node nb acc =
-        match nb with
-        | 0 -> Node 0 :: acc
-        | _ -> create_node (nb - 1) (Node nb :: acc)
+    
 
     
 end
