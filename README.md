@@ -16,9 +16,7 @@ exemples fournis (ou une erreur quand un tel programme n’existe pas).
 ## Setup
 Pour build le projet:
 
-'''
-$ ./dune init
-'''
+`$ ./dune init`
 
 ## Utilisation
 * Votre programme `genconcat` accepte les modes suivants de fonctionnement :
