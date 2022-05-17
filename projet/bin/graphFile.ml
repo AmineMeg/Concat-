@@ -123,9 +123,6 @@ let create_graph_from file =
 let create_prog_from file =
     let prog = Graph.concat (create_graph_from file)
     in 
-    print_string "[DEBUT DU PROG]\n";
-    Graph.print_labs prog;
-    print_string "\n[FIN DU PROG]\n\n";
     prog
 
 let apply_file file_path prog =
@@ -137,5 +134,7 @@ let apply_file file_path prog =
             input^"\t"^(Graph.apply_concat input prog ^"\n"^ (apply file prog))
     in
     apply (String.split_on_char '\n' (read_lines file_path)) prog
+
+    
 
     
