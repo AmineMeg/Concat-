@@ -246,6 +246,8 @@ struct
     (** Intersection de deux set de la forme (i, j) où i et j sont
     les indexes de début et de fin de la fonction extract *)
     let inter_set v1 v2: pos_expression list * pos_expression list * label list =
+        (* Renvoie l'arrete Some v si elle est dans vs
+        sinon None *)
         let rec vert_in_set v vs =
             match vs with
             | [] -> None
@@ -254,6 +256,7 @@ struct
                 then Some v
                 else vert_in_set v t
         in 
+        (* Intersection de deux ensembles v1 v2 *)
         let rec aux v1 v2 acc =
             match v1 with
             | [] -> acc
